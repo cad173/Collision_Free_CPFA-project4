@@ -161,6 +161,30 @@ Adversary_controller_autogen/fast:
 	cd /Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build && $(MAKE) $(MAKESILENT) -f source/Adversary/CMakeFiles/Adversary_controller_autogen.dir/build.make source/Adversary/CMakeFiles/Adversary_controller_autogen.dir/build
 .PHONY : Adversary_controller_autogen/fast
 
+Adversary_controller.o: Adversary_controller.cpp.o
+.PHONY : Adversary_controller.o
+
+# target to build an object file
+Adversary_controller.cpp.o:
+	cd /Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build && $(MAKE) $(MAKESILENT) -f source/Adversary/CMakeFiles/Adversary_controller.dir/build.make source/Adversary/CMakeFiles/Adversary_controller.dir/Adversary_controller.cpp.o
+.PHONY : Adversary_controller.cpp.o
+
+Adversary_controller.i: Adversary_controller.cpp.i
+.PHONY : Adversary_controller.i
+
+# target to preprocess a source file
+Adversary_controller.cpp.i:
+	cd /Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build && $(MAKE) $(MAKESILENT) -f source/Adversary/CMakeFiles/Adversary_controller.dir/build.make source/Adversary/CMakeFiles/Adversary_controller.dir/Adversary_controller.cpp.i
+.PHONY : Adversary_controller.cpp.i
+
+Adversary_controller.s: Adversary_controller.cpp.s
+.PHONY : Adversary_controller.s
+
+# target to generate assembly for a file
+Adversary_controller.cpp.s:
+	cd /Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build && $(MAKE) $(MAKESILENT) -f source/Adversary/CMakeFiles/Adversary_controller.dir/build.make source/Adversary/CMakeFiles/Adversary_controller.dir/Adversary_controller.cpp.s
+.PHONY : Adversary_controller.cpp.s
+
 Adversary_controller_autogen/mocs_compilation.o: Adversary_controller_autogen/mocs_compilation.cpp.o
 .PHONY : Adversary_controller_autogen/mocs_compilation.o
 
@@ -196,6 +220,9 @@ help:
 	@echo "... Adversary_controller_autogen"
 	@echo "... Adversary_controller_autogen_timestamp_deps"
 	@echo "... Adversary_controller"
+	@echo "... Adversary_controller.o"
+	@echo "... Adversary_controller.i"
+	@echo "... Adversary_controller.s"
 	@echo "... Adversary_controller_autogen/mocs_compilation.o"
 	@echo "... Adversary_controller_autogen/mocs_compilation.i"
 	@echo "... Adversary_controller_autogen/mocs_compilation.s"

@@ -37,15 +37,28 @@
 
     </CPFA_controller>
 
-    <Adversary_controller id="adversary" library="build/source/Adversary/libAdversary_controller">
+    <!-- <Adversary_controller id="adversary" library="build/source/Adversary/libAdversary_controller">
       <actuators>
         <differential_steering implementation="default"/>
       </actuators>
 
       <sensors>
         <footbot_proximity implementation="default" show_rays="false"/>
+        <positioning implementation="default"/>   
       </sensors>
-    </Adversary_controller>
+    </Adversary_controller> -->
+
+      <AdversaryController id="adversary" library="build/source/Adversary/libAdversary_controller">
+        <actuators>
+          <differential_steering implementation="default"/>
+        </actuators>
+
+        <sensors>
+          <footbot_proximity implementation="default"/>
+          <positioning implementation="default"/>
+        </sensors>
+
+      </AdversaryController>
     
   </controllers>
 
@@ -107,14 +120,14 @@ VaryForwardSpeedFlag = "0" NumOfBranches = "4"/>
     <foot-bot id="F0-"><controller config="CPFA"/></foot-bot>
     </entity>
 
-    <entity quantity="1">
-      <foot-bot id="ADVTEST">
+   <entity quantity="2">
+      <foot-bot id="ADV_0">
         <controller config="adversary"/>
       </foot-bot>
     </entity>
 
-    <entity quantity="1">
-      <foot-bot id="ADVTEST">
+    <!-- <entity quantity="1">
+      <foot-bot id="ADVTEST2">
         <controller config="adversary"/>
 
         <actuators>
@@ -134,7 +147,7 @@ VaryForwardSpeedFlag = "0" NumOfBranches = "4"/>
         </params>
 
       </foot-bot>
-    </entity>
+    </entity> -->
 
   </distribute>
 

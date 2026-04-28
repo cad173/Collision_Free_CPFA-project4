@@ -12,7 +12,15 @@
 	"CROSS_CONFIG" : false,
 	"DEP_FILE" : "/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/Adversary/Adversary_controller_autogen/deps",
 	"DEP_FILE_RULE_NAME" : "Adversary_controller_autogen/timestamp",
-	"HEADERS" : [],
+	"HEADERS" : 
+	[
+		[
+			"/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/source/Adversary/Adversary_controller.h",
+			"Mu",
+			"EWIEGA46WW/moc_Adversary_controller.cpp",
+			null
+		]
+	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
 	"INCLUDE_DIR" : "/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/Adversary/Adversary_controller_autogen/include",
 	"MOC_COMPILATION_FILE" : "/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/Adversary/Adversary_controller_autogen/mocs_compilation.cpp",
@@ -90,7 +98,14 @@
 	"QT_VERSION_MAJOR" : 6,
 	"QT_VERSION_MINOR" : 10,
 	"SETTINGS_FILE" : "/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/Adversary/CMakeFiles/Adversary_controller_autogen.dir/AutogenUsed.txt",
-	"SOURCES" : [],
+	"SOURCES" : 
+	[
+		[
+			"/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/source/Adversary/Adversary_controller.cpp",
+			"Mu",
+			null
+		]
+	],
 	"USE_BETTER_GRAPH" : true,
 	"VERBOSITY" : 0
 }

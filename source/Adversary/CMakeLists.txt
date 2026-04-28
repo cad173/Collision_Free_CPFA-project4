@@ -1,5 +1,5 @@
 add_library(Adversary_controller SHARED
-    AdversaryController.cpp
+    Adversary_controller.cpp
 )
 
 target_link_libraries(Adversary_controller
