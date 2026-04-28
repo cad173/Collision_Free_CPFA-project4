@@ -10,5 +10,7 @@ set(__QT_DEPLOY_TARGET_CPFA_loop_functions_FILE /Users/sammy/School/CSCI3351/arg
 set(__QT_DEPLOY_TARGET_CPFA_loop_functions_TYPE SHARED_LIBRARY)
 set(__QT_DEPLOY_TARGET_CPFA_controller_FILE /Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/CPFA/libCPFA_controller.dylib)
 set(__QT_DEPLOY_TARGET_CPFA_controller_TYPE SHARED_LIBRARY)
+set(__QT_DEPLOY_TARGET_Adversary_controller_FILE /Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/Adversary/libAdversary_controller.dylib)
+set(__QT_DEPLOY_TARGET_Adversary_controller_TYPE SHARED_LIBRARY)
 set(__QT_DEPLOY_TARGET_cpfa_evolver_FILE /Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/cpfa_evolver)
 set(__QT_DEPLOY_TARGET_cpfa_evolver_TYPE EXECUTABLE)

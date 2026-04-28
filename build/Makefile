@@ -392,6 +392,45 @@ CPFA_controller_autogen/fast:
 	$(MAKE) $(MAKESILENT) -f source/CPFA/CMakeFiles/CPFA_controller_autogen.dir/build.make source/CPFA/CMakeFiles/CPFA_controller_autogen.dir/build
 .PHONY : CPFA_controller_autogen/fast
 
+#=============================================================================
+# Target rules for targets named Adversary_controller
+
+# Build rule for target.
+Adversary_controller: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Adversary_controller
+.PHONY : Adversary_controller
+
+# fast build rule for target.
+Adversary_controller/fast:
+	$(MAKE) $(MAKESILENT) -f source/Adversary/CMakeFiles/Adversary_controller.dir/build.make source/Adversary/CMakeFiles/Adversary_controller.dir/build
+.PHONY : Adversary_controller/fast
+
+#=============================================================================
+# Target rules for targets named Adversary_controller_autogen_timestamp_deps
+
+# Build rule for target.
+Adversary_controller_autogen_timestamp_deps: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Adversary_controller_autogen_timestamp_deps
+.PHONY : Adversary_controller_autogen_timestamp_deps
+
+# fast build rule for target.
+Adversary_controller_autogen_timestamp_deps/fast:
+	$(MAKE) $(MAKESILENT) -f source/Adversary/CMakeFiles/Adversary_controller_autogen_timestamp_deps.dir/build.make source/Adversary/CMakeFiles/Adversary_controller_autogen_timestamp_deps.dir/build
+.PHONY : Adversary_controller_autogen_timestamp_deps/fast
+
+#=============================================================================
+# Target rules for targets named Adversary_controller_autogen
+
+# Build rule for target.
+Adversary_controller_autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Adversary_controller_autogen
+.PHONY : Adversary_controller_autogen
+
+# fast build rule for target.
+Adversary_controller_autogen/fast:
+	$(MAKE) $(MAKESILENT) -f source/Adversary/CMakeFiles/Adversary_controller_autogen.dir/build.make source/Adversary/CMakeFiles/Adversary_controller_autogen.dir/build
+.PHONY : Adversary_controller_autogen/fast
+
 cpfa_evolver_autogen/mocs_compilation.o: cpfa_evolver_autogen/mocs_compilation.cpp.o
 .PHONY : cpfa_evolver_autogen/mocs_compilation.o
 
@@ -448,6 +487,8 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... Adversary_controller_autogen"
+	@echo "... Adversary_controller_autogen_timestamp_deps"
 	@echo "... BaseController_autogen"
 	@echo "... BaseController_autogen_timestamp_deps"
 	@echo "... CPFA_controller_autogen"
@@ -462,6 +503,7 @@ help:
 	@echo "... Pheromone_autogen_timestamp_deps"
 	@echo "... cpfa_evolver_autogen"
 	@echo "... cpfa_evolver_autogen_timestamp_deps"
+	@echo "... Adversary_controller"
 	@echo "... BaseController"
 	@echo "... CPFA_controller"
 	@echo "... CPFA_loop_functions"

@@ -36,6 +36,20 @@
       </params>
 
     </CPFA_controller>
+
+    <Adversary_controller id="adversary" library="build/source/Adversary/libAdversary_controller">
+      <actuators>
+        <differential_steering implementation="default"/>
+      </actuators>
+
+      <sensors>
+        <footbot_proximity implementation="default" show_rays="false"/>
+      </sensors>
+
+      <params>
+      </params>
+
+    </Adversary_controller>
     
   </controllers>
 
@@ -63,7 +77,7 @@ VaryForwardSpeedFlag = "0" NumOfBranches = "4"/>
   <!-- *********************** -->
   <!-- * Arena configuration * -->
   <!-- *********************** -->
-  <arena center="0,0,0.5" size="16.0, 16.0, 1">
+<arena center="0,0,0.5" size="16.0, 16.0, 1">
 
     <floor id="floor" pixels_per_meter="10" source="loop_functions"/>
     
@@ -88,13 +102,22 @@ VaryForwardSpeedFlag = "0" NumOfBranches = "4"/>
     
     
    <!--Distribute foraging robots --> 
-<distribute>
-<position max="3.0, 3.0, 0.0" method="uniform" min="-3.0, -3.0, 0.0"/>
-<orientation mean="0, 0, 0" method="gaussian" std_dev="360, 0, 0"/>
-<entity max_trials="100" quantity="64">
-<foot-bot id="F0-"><controller config="CPFA"/></foot-bot>
-</entity>
-</distribute>
+  <distribute>
+
+    <position max="3.0, 3.0, 0.0" method="uniform" min="-3.0, -3.0, 0.0"/>
+    <orientation mean="0, 0, 0" method="gaussian" std_dev="360, 0, 0"/>
+
+    <entity max_trials="100" quantity="10">
+    <foot-bot id="F0-"><controller config="CPFA"/></foot-bot>
+    </entity>
+
+    <entity quantity="1">
+      <foot-bot id="ADVTEST">
+        <controller config="adversary"/>
+      </foot-bot>
+    </entity>
+
+  </distribute>
 
   </arena> 
     

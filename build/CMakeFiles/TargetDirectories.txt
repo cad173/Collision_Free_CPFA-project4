@@ -29,3 +29,8 @@
 /Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/CPFA/CMakeFiles/CPFA_loop_functions_autogen.dir
 /Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/CPFA/CMakeFiles/CPFA_controller_autogen_timestamp_deps.dir
 /Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/CPFA/CMakeFiles/CPFA_controller_autogen.dir
+/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/Adversary/CMakeFiles/Adversary_controller.dir
+/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/Adversary/CMakeFiles/edit_cache.dir
+/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/Adversary/CMakeFiles/rebuild_cache.dir
+/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/Adversary/CMakeFiles/Adversary_controller_autogen_timestamp_deps.dir
+/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/Adversary/CMakeFiles/Adversary_controller_autogen.dir
