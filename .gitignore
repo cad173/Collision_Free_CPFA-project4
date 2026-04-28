@@ -1,0 +1,80 @@
+
+# =========================
+# GLOBAL BUILD ARTIFACTS (CMake / ARGoS / GA)
+# =========================
+build/
+*/build/
+CMakeFiles/
+*/CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.make
+*.ninja
+
+# compiled objects / libs
+*.o
+*.a
+*.so
+*.out
+
+# =========================
+# ARGoS GENERATED / SIMULATION OUTPUT
+# =========================
+*.log
+logs/
+results/
+output/
+data/
+*.dat
+*.csv
+
+# =========================
+# QT / ARGoS auto-generated controller files
+# (your repo clearly uses Qt auto-moc)
+# =========================
+*_autogen/
+*_autogen_timestamp_deps.dir/
+moc_*
+ui_*
+
+# =========================
+# PYTHON CACHE (you have argos_util.py etc.)
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+
+# =========================
+# EXPERIMENT TEMP FILES (VERY IMPORTANT FOR YOUR REPO)
+# =========================
+experiments/*~
+*.xml~
+*.txt~
+
+# =========================
+# DOXYGEN OUTPUT (you already have it generated)
+# =========================
+documentation/html/
+documentation/latex/
+
+# =========================
+# IDE / OS
+# =========================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# =========================
+# MPI / GA TEMP BUILD OUTPUTS
+# =========================
+*.gcda
+*.gcno
+*.profraw
+
+# =========================
+# ARGoS binary artifacts (if produced in repo root)
+# =========================
+argos_simulator
+cpfa_evolver
