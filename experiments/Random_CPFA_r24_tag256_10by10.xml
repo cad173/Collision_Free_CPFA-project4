@@ -34,6 +34,16 @@
 
     </CPFA_controller>
     
+    <advesary_controller id="ADVERSARY" library="build/source/CPFA/libadvesary_controller">
+      <actuators>
+        <leds implementation="default" medium="leds"/>
+      </actuators>
+      <sensors/>
+      <params>
+        <advesary_controller FakeDensity="20" FakeDecayRate="0.02" InjectionRate="320"/>
+      </params>
+    </advesary_controller>
+
   </controllers>
 
   <loop_functions label="CPFA_loop_functions" library="build/source/CPFA/libCPFA_loop_functions">
@@ -42,9 +52,9 @@
         <CPFA PrintFinalScore="1" ProbabilityOfReturningToNest="0.0147598869881" ProbabilityOfSwitchingToSearching="0.723128706375" RateOfInformedSearchDecay="0.205799848158" RateOfLayingPheromone="14.7027566005" RateOfPheromoneDecay="0.0245057227138" RateOfSiteFidelity="14.1514206414" UninformedSearchVariation="2.81939731297"/>
 
          <settings ClusterWidthX="8" ClusterWidthY="8" DrawDensityRate="4" DrawIDs="1" 
-	 DrawTargetRays="0" DrawTrails="0" FoodDistribution="0" FoodItemCount="256" 
-	 FoodRadius="0.05" MaxSimCounter="1" MaxSimTimeInSeconds="1800" 
-	 NestElevation="0.001" NestPosition="0,0" NestRadius="0.5" NumberOfClusters="4" OutputData="0" 
+	 DrawTargetRays="0" DrawTrails="1" FoodDistribution="1" FoodItemCount="256"
+	 FoodRadius="0.05" MaxSimCounter="1" MaxSimTimeInSeconds="1800"
+	 NestElevation="0.001" NestPosition="0,0" NestRadius="0.5" NumberOfClusters="1" OutputData="0" 
 	 PowerlawFoodUnitCount="256" VariableFoodPlacement="0"/>
 
   </loop_functions>
@@ -117,7 +127,11 @@
         </foot-bot>
       </entity>
     </distribute>
-    
+    <foot-bot id="adversary0">
+      <body position="3, 3, 0" orientation="0,0,0"/>
+      <controller config="ADVERSARY"/>
+    </foot-bot>
+
   </arena> 
     
   <!-- ******************* -->
@@ -136,15 +150,15 @@
   <!-- ****************** -->
 
 
-<!-- <visualization>
+ <visualization>
 
 <qt-opengl>
       <camera>
-        <placement idx="0" position="  0, 0, 10" look_at="0, 0, 0" lens_focal_length="25"/>
+        <placement idx="0" position="0, 0, 20" look_at="0, 0, 0" lens_focal_length="25"/>
       </camera>
       <user_functions label="CPFA_qt_user_functions"/>
     </qt-opengl>
 
-  </visualization> -->
+  </visualization>
 
 </argos-configuration>

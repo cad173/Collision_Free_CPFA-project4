@@ -13,6 +13,9 @@ add_library(CPFA_controller     SHARED CPFA_controller.h
                                        CPFA_loop_functions.h
                                        CPFA_loop_functions.cpp)
 
+add_library(advesary_controller     SHARED  advesary_controller.h
+                                            advesary_controller.cpp)
+
 ###############################################
 # link shared object files to dependencies
 ###############################################
@@ -30,3 +33,9 @@ target_link_libraries(CPFA_loop_functions
                       argos3plugin_simulator_genericrobot
                       argos3plugin_simulator_qtopengl
                       ${ARGOS_QTOPENGL_LIBRARIES})
+
+target_link_libraries(advesary_controller
+                      BaseController
+                      Pheromone
+                      CPFA_loop_functions)
+
