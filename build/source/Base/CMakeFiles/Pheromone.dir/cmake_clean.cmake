@@ -6,8 +6,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Pheromone.dir/Pheromone.cpp.o.d"
   "CMakeFiles/Pheromone.dir/Pheromone_autogen/mocs_compilation.cpp.o"
   "CMakeFiles/Pheromone.dir/Pheromone_autogen/mocs_compilation.cpp.o.d"
+  "libPheromone.dylib"
   "libPheromone.pdb"
-  "libPheromone.so"
 )
 
 # Per-language clean rules from dependency scanning.

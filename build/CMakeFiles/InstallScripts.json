@@ -1,0 +1,11 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/cmake_install.cmake",
+		"/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/cmake_install.cmake",
+		"/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/ga-mpi/cmake_install.cmake",
+		"/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/Base/cmake_install.cmake",
+		"/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/source/CPFA/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

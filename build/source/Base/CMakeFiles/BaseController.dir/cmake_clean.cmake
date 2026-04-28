@@ -6,8 +6,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/BaseController.dir/BaseController.cpp.o.d"
   "CMakeFiles/BaseController.dir/BaseController_autogen/mocs_compilation.cpp.o"
   "CMakeFiles/BaseController.dir/BaseController_autogen/mocs_compilation.cpp.o.d"
+  "libBaseController.dylib"
   "libBaseController.pdb"
-  "libBaseController.so"
 )
 
 # Per-language clean rules from dependency scanning.
