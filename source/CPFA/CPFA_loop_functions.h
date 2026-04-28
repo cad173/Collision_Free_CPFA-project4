@@ -66,6 +66,11 @@ class CPFA_loop_functions : public argos::CLoopFunctions
 		double getRateOfLayingPheromone();
 		double getRateOfPheromoneDecay();
 
+		argos::CRange<argos::Real> getForageRangeX() { return ForageRangeX; }
+		argos::CRange<argos::Real> getForageRangeY() { return ForageRangeY; }
+		std::vector<Pheromone>& getPheromoneList()   { return PheromoneList; }
+		argos::CVector2 getNestPosition()            { return NestPosition; }
+
 	protected:
 
 		void setScore(double s);

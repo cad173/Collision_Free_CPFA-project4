@@ -10,6 +10,8 @@
 #include <cmath>
 #include <stack>
 
+class CPFA_loop_functions;
+
 /**
  * BaseController
  * @author Antonio Griego
@@ -43,6 +45,8 @@ class BaseController : public argos::CCI_Controller {
 
 		void SetIsHeadingToNest(bool n);
 		bool IsAtTarget();
+
+		virtual void SetLoopFunctions(CPFA_loop_functions* lf) {}
 
 	protected:
 

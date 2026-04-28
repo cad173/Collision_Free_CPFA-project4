@@ -116,12 +116,12 @@ void CPFA_loop_functions::Init(argos::TConfigurationNode &node) {
     
     Num_robots = footbots.size();
     argos::LOG<<"Number of robots="<<Num_robots<<endl;
-	   for(it = footbots.begin(); it != footbots.end(); it++) {
-   	   	argos::CFootBotEntity& footBot = *argos::any_cast<argos::CFootBotEntity*>(it->second);
-		      BaseController& c = dynamic_cast<BaseController&>(footBot.GetControllableEntity().GetController());
-		      CPFA_controller& c2 = dynamic_cast<CPFA_controller&>(c);
-        c2.SetLoopFunctions(this);
-	    }
+	   for(it = footbots.begin(); it != footbots.end(); it++)
+	   {
+	   	argos::CFootBotEntity& footBot = *argos::any_cast<argos::CFootBotEntity*>(it->second);
+		BaseController& c = dynamic_cast<BaseController&>(footBot.GetControllableEntity().GetController());
+		c.SetLoopFunctions(this);
+	   }
      
      
    NestRadiusSquared = NestRadius*NestRadius;
@@ -160,9 +160,11 @@ void CPFA_loop_functions::Reset() {
     for(it = footbots.begin(); it != footbots.end(); it++) {
         argos::CFootBotEntity& footBot = *argos::any_cast<argos::CFootBotEntity*>(it->second);
         BaseController& c = dynamic_cast<BaseController&>(footBot.GetControllableEntity().GetController());
-        CPFA_controller& c2 = dynamic_cast<CPFA_controller&>(c);
-        MoveEntity(footBot.GetEmbodiedEntity(), c2.GetStartPosition(), argos::CQuaternion(), false);
-    c2.Reset();
+        try {
+            CPFA_controller& c2 = dynamic_cast<CPFA_controller&>(c);
+            MoveEntity(footBot.GetEmbodiedEntity(), c2.GetStartPosition(), argos::CQuaternion(), false);
+            c2.Reset();
+        } catch(std::bad_cast&) {}
     }
 }
 
@@ -268,17 +270,10 @@ void CPFA_loop_functions::PostExperiment() {
         for(argos::CSpace::TMapPerType::iterator it = footbots.begin(); it != footbots.end(); it++) {
             argos::CFootBotEntity& footBot = *argos::any_cast<argos::CFootBotEntity*>(it->second);
             BaseController& c = dynamic_cast<BaseController&>(footBot.GetControllableEntity().GetController());
-            CPFA_controller& c2 = dynamic_cast<CPFA_controller&>(c);
-            CollisionTime += c2.GetCollisionTime();
-            
-            /*if(c2.GetStatus() == "SEARCHING"){
-                total_search_time += SimTime-c2.GetTravelingTime();
-                total_travel_time += c2.GetTravelingTime();
-	    }
-            else {
-		total_search_time += c2.GetSearchingTime();
-		total_travel_time += SimTime-c2.GetSearchingTime();
-            } */        
+            try {
+                CPFA_controller& c2 = dynamic_cast<CPFA_controller&>(c);
+                CollisionTime += c2.GetCollisionTime();
+            } catch(std::bad_cast&) {}
         }
         //travelSearchTimeDataOutput<< total_travel_time/ticks_per_second<<", "<<total_search_time/ticks_per_second<<endl;
         //travelSearchTimeDataOutput.close();   

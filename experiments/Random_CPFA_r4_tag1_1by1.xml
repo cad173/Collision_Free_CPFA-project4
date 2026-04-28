@@ -34,6 +34,16 @@
 
     </CPFA_controller>
     
+    <advesary_controller id="ADVERSARY" library="build/source/CPFA/libadvesary_controller">
+      <actuators>
+        <leds implementation="default" medium="leds"/>
+      </actuators>
+      <sensors/>
+      <params>
+        <advesary_controller FakeDensity="5" FakeDecayRate="0.02" InjectionRate="32"/>
+      </params>
+    </advesary_controller>
+
   </controllers>
 
   <loop_functions label="CPFA_loop_functions" library="build/source/CPFA/libCPFA_loop_functions">
@@ -88,7 +98,11 @@
       </entity>
     </distribute>
 
-    
+    <foot-bot id="adversary0">
+      <body position="0.3, 0.3, 0" orientation="0,0,0"/>
+      <controller config="ADVERSARY"/>
+    </foot-bot>
+
   </arena> 
     
   <!-- ******************* -->
