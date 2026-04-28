@@ -45,10 +45,6 @@
       <sensors>
         <footbot_proximity implementation="default" show_rays="false"/>
       </sensors>
-
-      <params>
-      </params>
-
     </Adversary_controller>
     
   </controllers>
@@ -114,6 +110,29 @@ VaryForwardSpeedFlag = "0" NumOfBranches = "4"/>
     <entity quantity="1">
       <foot-bot id="ADVTEST">
         <controller config="adversary"/>
+      </foot-bot>
+    </entity>
+
+    <entity quantity="1">
+      <foot-bot id="ADVTEST">
+        <controller config="adversary"/>
+
+        <actuators>
+          <differential_steering implementation="default"/>
+          <leds implementation="default" medium="leds"/>
+        </actuators>
+
+        <sensors>
+          <footbot_proximity implementation="default"/>
+          <positioning implementation="default"/>
+        </sensors>
+
+        <params>
+          <leds>
+            <color r="255" g="0" b="0"/>
+          </leds>
+        </params>
+
       </foot-bot>
     </entity>
 

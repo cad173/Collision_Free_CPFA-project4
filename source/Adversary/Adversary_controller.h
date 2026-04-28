@@ -3,13 +3,13 @@
 
 #include "BaseController.h"
 
-class CAdversaryController : public BaseController {
+class AdversaryController : public BaseController {
 
 public:
 
-    CAdversaryController();
+    AdversaryController();
 
-    virtual ~CAdversaryController() {}
+    virtual ~AdversaryController() {}
 
     virtual void ControlStep() override;
 

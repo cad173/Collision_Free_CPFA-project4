@@ -2,32 +2,34 @@
 #include <argos3/core/utility/math/rng.h>
 
 using namespace argos;
+virtual void Init() override;
+virtual void Reset() override;
 
 static int FORCE_KEEP = [](){
     std::cerr << "ADV FORCE LINK ACTIVE\n";
     return 0;
 }();
 
-CAdversaryController::CAdversaryController() :
+AdversaryController::AdversaryController() :
     m_unStepCounter(0),
     m_unNextDecisionStep(0)
 {
     std::cerr << "CONSTRUCTOR HIT" << std::endl;
-    LOG << "[ADV] Controller constructed" << std::endl;
+    std::cerr << "[ADV] Controller constructed" << std::endl;
 }
 
-void CAdversaryController::Init() {
-    LOG << "[ADV] Adversary initialized: " << GetId() << std::endl;
+void AdversaryController::Init() {
+    std::cerr << "[ADV] Adversary initialized: " << GetId() << std::endl;
 }
 
-void CAdversaryController::Reset() {
+void AdversaryController::Reset() {
     m_unStepCounter = 0;
     m_unNextDecisionStep = 0;
-    LOG << "[ADV] Adversary spawned / reset: " << GetId() << std::endl;
+    std::cerr << "[ADV] Adversary spawned / reset: " << GetId() << std::endl;
     Stop();
 }
 
-void CAdversaryController::ControlStep() {
+void AdversaryController::ControlStep() {
 
     m_unStepCounter++;
 
@@ -40,7 +42,7 @@ void CAdversaryController::ControlStep() {
     Move();
 }
 
-void CAdversaryController::ChooseNextAction() {
+void AdversaryController::ChooseNextAction() {
 
     // reset decision timer (random interval)
     m_unNextDecisionStep = m_unStepCounter + RNG->Uniform(CRange<UInt32>(10, 40));
@@ -62,4 +64,4 @@ void CAdversaryController::ChooseNextAction() {
     }
 }
 
-REGISTER_CONTROLLER(Adversary_controller, "adversary")
+REGISTER_CONTROLLER(AdversaryController, "adversary")

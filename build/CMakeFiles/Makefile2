@@ -226,8 +226,8 @@ CMakeFiles/cpfa_evolver.dir/all: source/Base/CMakeFiles/Pheromone.dir/all
 CMakeFiles/cpfa_evolver.dir/all: source/Base/CMakeFiles/Nest.dir/all
 CMakeFiles/cpfa_evolver.dir/all: source/CPFA/CMakeFiles/CPFA_loop_functions.dir/all
 CMakeFiles/cpfa_evolver.dir/all: source/CPFA/CMakeFiles/CPFA_controller.dir/all
-CMakeFiles/cpfa_evolver.dir/all: CMakeFiles/cpfa_evolver_autogen_timestamp_deps.dir/all
 CMakeFiles/cpfa_evolver.dir/all: CMakeFiles/cpfa_evolver_autogen.dir/all
+CMakeFiles/cpfa_evolver.dir/all: CMakeFiles/cpfa_evolver_autogen_timestamp_deps.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cpfa_evolver.dir/build.make CMakeFiles/cpfa_evolver.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cpfa_evolver.dir/build.make CMakeFiles/cpfa_evolver.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/sammy/School/CSCI3351/argos/Collision_Free_CPFA-project4/build/CMakeFiles --progress-num=62,63,64 "Built target cpfa_evolver"
