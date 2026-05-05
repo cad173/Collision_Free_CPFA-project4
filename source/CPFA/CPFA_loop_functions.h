@@ -57,7 +57,7 @@ class CPFA_loop_functions : public argos::CLoopFunctions
 		std::vector<argos::CColor>   TargetRayColorList;
 
 		unsigned int getNumberOfRobots();
-        void increaseNumDistributedFoodByOne();
+    void increaseNumDistributedFoodByOne();
 		double getProbabilityOfSwitchingToSearching();
 		double getProbabilityOfReturningToNest();
 		double getUninformedSearchVariation();
@@ -71,7 +71,6 @@ class CPFA_loop_functions : public argos::CLoopFunctions
 		std::vector<Pheromone>& getPheromoneList()   { return PheromoneList; }
 		argos::CVector2 getNestPosition()            { return NestPosition; }
 
-	protected:
 
 		void setScore(double s);
 
@@ -142,7 +141,7 @@ class CPFA_loop_functions : public argos::CLoopFunctions
 		void RandomFoodDistribution();
 		void ClusterFoodDistribution();
 		void PowerLawFoodDistribution();
-                bool IsOutOfBounds(argos::CVector2 p, size_t length, size_t width);
+    bool IsOutOfBounds(argos::CVector2 p, size_t length, size_t width);
 		bool IsCollidingWithNest(argos::CVector2 p);
 		bool IsCollidingWithFood(argos::CVector2 p);
 		double score;
