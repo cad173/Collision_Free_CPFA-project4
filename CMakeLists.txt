@@ -60,6 +60,17 @@ add_subdirectory(source)
 if (BUILD_EVOLVER)
 
 
+add_library(Adversary_controller SHARED 
+    source/AdversaryController.cpp 
+    source/AdversaryController.h
+)
+
+target_link_libraries(Adversary_controller
+    CPFA_controller
+    argos3core_simulator
+    argos3plugin_simulator_footbot
+)
+
 
 # Find the boost filesystem package.
 find_package( Boost REQUIRED COMPONENTS system filesystem )
@@ -77,3 +88,4 @@ target_link_libraries(cpfa_evolver CPFA_controller
 				   argos3core_simulator)
 else()
 endif()
+

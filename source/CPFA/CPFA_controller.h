@@ -21,8 +21,8 @@ class CPFA_controller : public BaseController {
 		CPFA_controller();
 
 		// CCI_Controller inheritence functions
-		void Init(argos::TConfigurationNode &node);
-		void ControlStep();
+		virtual void Init(argos::TConfigurationNode &node);
+		virtual void ControlStep();
 		void Reset();
 
 		bool IsHoldingFood();
@@ -39,7 +39,7 @@ class CPFA_controller : public BaseController {
   size_t      startTime;//qilu 09/26/2016
         
 
-	private:
+	protected:
   string 			controllerID;//qilu 07/26/2016
 
 		CPFA_loop_functions* LoopFunctions;
@@ -82,16 +82,16 @@ class CPFA_controller : public BaseController {
 		void CPFA();
 		void Departing();
 		void Searching();
-		void Returning();
+		virtual void Returning();
 		void Surveying();
 
 		/* CPFA helper functions */
 		void SetRandomSearchLocation();
 		void SetHoldingFood();
 		void SetLocalResourceDensity();
-		void SetFidelityList(argos::CVector2 newFidelity);
-		void SetFidelityList();
-		bool SetTargetPheromone();
+		virtual void SetFidelityList(argos::CVector2 newFidelity);
+		virtual void SetFidelityList();
+		virtual bool SetTargetPheromone();
 
 		argos::Real GetExponentialDecay(argos::Real value, argos::Real time, argos::Real lambda);
 		argos::Real GetBound(argos::Real value, argos::Real min, argos::Real max);
@@ -107,7 +107,7 @@ class CPFA_controller : public BaseController {
 
 		unsigned int survey_count;
 		/* Pointer to the LEDs actuator */
-        CCI_LEDsActuator* m_pcLEDs;
+    CCI_LEDsActuator* m_pcLEDs;
 };
 
 #endif /* CPFA_CONTROLLER_H */
