@@ -12,7 +12,7 @@ class Pheromone {
     public:
 
         /* constructor function */
-        Pheromone(argos::CVector2 newLocation, std::vector<argos::CVector2> newTrail, argos::Real newTime, argos::Real newDecayRate, size_t density, std::string id, bool fakePheromone = false);
+        Pheromone(argos::CVector2 newLocation, std::vector<argos::CVector2> newTrail, argos::Real newTime, argos::Real newDecayRate, size_t density);
 
         /* public helper functions */
         void                         Update(argos::Real time);
@@ -36,8 +36,6 @@ class Pheromone {
         argos::Real decayRate;
         argos::Real weight;
         argos::Real threshold;
-        bool isFake;
-        std::string robotID; // the ID of the robot that created this pheromone, used to find fake pheromones
 };
 
 #endif /* IANT_PHEROMONE_H */

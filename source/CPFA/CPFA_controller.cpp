@@ -509,7 +509,7 @@ void CPFA_controller::Returning() {
           if(poissonCDF_pLayRate > r1 && updateFidelity) {
 	            TrailToShare.push_back(LoopFunctions->NestPosition); //qilu 07/26/2016
                 argos::Real timeInSeconds = (argos::Real)(SimulationTick() / SimulationTicksPerSecond());
-		        Pheromone sharedPheromone(SiteFidelityPosition, TrailToShare, timeInSeconds, LoopFunctions->RateOfPheromoneDecay, ResourceDensity, GetId());
+		        Pheromone sharedPheromone(SiteFidelityPosition, TrailToShare, timeInSeconds, LoopFunctions->RateOfPheromoneDecay, ResourceDensity);
                 LoopFunctions->PheromoneList.push_back(sharedPheromone);
                 sharedPheromone.Deactivate(); // make sure this won't get re-added later...
           }

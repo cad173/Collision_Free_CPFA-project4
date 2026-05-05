@@ -1,4 +1,4 @@
-# Install script for directory: /home/xavier/Desktop/Robotics/finalProject/Collision_Free_CPFA-project4/source
+# Install script for directory: /home/qlu/Documents/random_drop_CPFA/source
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,13 +39,13 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/usr/bin/objdump")
+  set(CMAKE_OBJDUMP "/bin/objdump")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/xavier/Desktop/Robotics/finalProject/Collision_Free_CPFA-project4/build/source/Base/cmake_install.cmake")
-  include("/home/xavier/Desktop/Robotics/finalProject/Collision_Free_CPFA-project4/build/source/CPFA/cmake_install.cmake")
+  include("/home/qlu/Documents/random_drop_CPFA/build/source/Base/cmake_install.cmake")
+  include("/home/qlu/Documents/random_drop_CPFA/build/source/CPFA/cmake_install.cmake")
 
 endif()
 

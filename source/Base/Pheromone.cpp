@@ -14,9 +14,7 @@ Pheromone::Pheromone(argos::CVector2              newLocation,
                              std::vector<argos::CVector2> newTrail,
                              argos::Real                  newTime,
                              argos::Real                  newDecayRate,
-                             size_t                       density,
-                            std::string id, 
-                            bool fakePheromone)
+                             size_t                       density)
 {
     /* required initializations */
 	location    = newLocation;
@@ -27,8 +25,6 @@ Pheromone::Pheromone(argos::CVector2              newLocation,
     /* standardized initializations */
 	weight      = 1.0;
 	threshold   = 0.001;
-    isFake       = fakePheromone;
-    robotID      = id;
 }
 
 /*****

@@ -1,4 +1,4 @@
-# Install script for directory: /home/xavier/Desktop/Robotics/finalProject/Collision_Free_CPFA-project4/source/Base
+# Install script for directory: /home/qlu/Documents/random_drop_CPFA/source/Base
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,6 +39,6 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/usr/bin/objdump")
+  set(CMAKE_OBJDUMP "/bin/objdump")
 endif()
 
