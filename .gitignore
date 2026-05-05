@@ -1,1 +1,68 @@
-# 
+# =========================
+# Build artifacts (CMake)
+# =========================
+build/
+*/build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+*.ninja
+*.out
+*.log
+
+# compiled libraries / binaries
+*.so
+*.a
+*.o
+*.obj
+*.d
+
+# =========================
+# ARGoS / simulation outputs
+# =========================
+*.argos-log
+*.dat
+*.csv
+*.log
+
+# =========================
+# Python cache
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+
+# =========================
+# IDE / editor files
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# =========================
+# Doxygen / docs (optional)
+# =========================
+documentation/html/
+documentation/latex/
+
+# =========================
+# OS junk
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# MPI / GA build artifacts
+# =========================
+ga-mpi/build/
+*.o.d
+
+# =========================
+# temporary experiment outputs
+# =========================
+experiments/*/*.out
+experiments/*/*.log# 
