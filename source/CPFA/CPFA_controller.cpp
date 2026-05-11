@@ -14,6 +14,7 @@ CPFA_controller::CPFA_controller() :
 	LoopFunctions(NULL),
 	survey_count(0),
 	isUsingPheromone(0),
+	followedPheromoneIndex(-1),
     SiteFidelityPosition(1000, 1000), 
         searchingTime(0),
         travelingTime(0),
@@ -116,6 +117,7 @@ void CPFA_controller::Reset() {
     SearchTime      = 0;
     ResourceDensity = 0;
     collisionDelay = 0;
+    followedPheromoneIndex = -1;
     
   	LoopFunctions->CollisionTime=0; //qilu 09/26/2016
     
@@ -487,6 +489,20 @@ void CPFA_controller::Returning() {
 
 	// Are we there yet? (To the nest, that is.)
 	if(IsInTheNest()) {
+		/* If we followed a pheromone and came back empty-handed, vote against it. */
+		if(!isHoldingFood && followedPheromoneIndex >= 0 &&
+		   followedPheromoneIndex < (int)LoopFunctions->PheromoneList.size()) {
+			Pheromone& p = LoopFunctions->PheromoneList[followedPheromoneIndex];
+			p.IncrementSuspicionCount();
+			argos::LOG << "[VOTE] " << GetId()
+			           << " reporting pheromone[" << followedPheromoneIndex << "]"
+			           << (p.IsFake() ? " (FAKE)" : " (real)")
+			           << " — suspicious: " << (p.IsSuspicious() ? "YES (rejected)" : "no")
+			           << " at tick " << SimulationTick()
+			           << std::endl;
+		}
+		followedPheromoneIndex = -1;
+
 		// Based on a Poisson CDF, the robot may or may not create a pheromone
 	    // located at the last place it picked up food.
 	    argos::Real poissonCDF_pLayRate    = GetPoissonCDF(ResourceDensity, LoopFunctions->RateOfLayingPheromone);
@@ -774,44 +790,47 @@ void CPFA_controller::SetFidelityList() {
 bool CPFA_controller::SetTargetPheromone() {
 	argos::Real maxStrength = 0.0, randomWeight = 0.0;
 	bool isPheromoneSet = false;
+	followedPheromoneIndex = -1;
 
  if(LoopFunctions->PheromoneList.size()==0) return isPheromoneSet; //the case of no pheromone.
-	/* update the pheromone list and remove inactive pheromones */
 
-	/* default target = nest; in case we have 0 active pheromones */
-	//SetIsHeadingToNest(true);
-	//SetTarget(LoopFunctions->NestPosition);
-	/* Calculate a maximum strength based on active pheromone weights. */
+	/* Sum weights of active, non-suspicious pheromones only. */
 	for(size_t i = 0; i < LoopFunctions->PheromoneList.size(); i++) {
-		if(LoopFunctions->PheromoneList[i].IsActive()) {
+		if(LoopFunctions->PheromoneList[i].IsActive() && !LoopFunctions->PheromoneList[i].IsSuspicious()) {
 			maxStrength += LoopFunctions->PheromoneList[i].GetWeight();
 		}
 	}
 
+	if(maxStrength == 0.0) return isPheromoneSet;
+
 	/* Calculate a random weight. */
 	randomWeight = RNG->Uniform(argos::CRange<argos::Real>(0.0, maxStrength));
 
-	/* Randomly select an active pheromone to follow. */
+	/* Randomly select an active, non-suspicious pheromone to follow. */
 	for(size_t i = 0; i < LoopFunctions->PheromoneList.size(); i++) {
-		   if(randomWeight < LoopFunctions->PheromoneList[i].GetWeight()) {
-			       /* We've chosen a pheromone! */
-			       SetIsHeadingToNest(false);
-          SetTarget(LoopFunctions->PheromoneList[i].GetLocation());
-          TrailToFollow = LoopFunctions->PheromoneList[i].GetTrail();
-          isPheromoneSet = true;
-          /* If we pick a pheromone, break out of this loop. */
-          break;
-     }
+		if(!LoopFunctions->PheromoneList[i].IsActive() || LoopFunctions->PheromoneList[i].IsSuspicious()) {
+			continue; // skip inactive or voted-out pheromones
+		}
 
-     /* We didn't pick a pheromone! Remove its weight from randomWeight. */
-     randomWeight -= LoopFunctions->PheromoneList[i].GetWeight();
+		if(randomWeight < LoopFunctions->PheromoneList[i].GetWeight()) {
+			/* We've chosen a pheromone — record the index and count the visit. */
+			SetIsHeadingToNest(false);
+			SetTarget(LoopFunctions->PheromoneList[i].GetLocation());
+			TrailToFollow = LoopFunctions->PheromoneList[i].GetTrail();
+			isPheromoneSet = true;
+			followedPheromoneIndex = (int)i;
+			LoopFunctions->PheromoneList[i].IncrementVisitCount();
+			/* log whether the chosen pheromone is real or fake */
+			argos::LOG << "[VOTE] " << GetId()
+			           << " following pheromone[" << i << "]"
+			           << (LoopFunctions->PheromoneList[i].IsFake() ? " (FAKE)" : " (real)")
+			           << " at tick " << SimulationTick()
+			           << std::endl;
+			break;
+		}
+
+		randomWeight -= LoopFunctions->PheromoneList[i].GetWeight();
 	}
-
-	//ofstream log_output_stream;
-	//log_output_stream.open("cpfa_log.txt", ios::app);
-	//log_output_stream << "Found: " << LoopFunctions->PheromoneList.size()  << " waypoints." << endl;
-	//log_output_stream << "Follow waypoint?: " << isPheromoneSet << endl;
-	//log_output_stream.close();
 
 	return isPheromoneSet;
 }

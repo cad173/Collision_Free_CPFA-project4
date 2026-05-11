@@ -37,12 +37,11 @@ void ACPFA_controller::FakePheromoneTrail()
 
     CVector2 fakeTarget = GetPosition();
 
-    // Build a fake trail (reuse your own movement history)
-    std::vector<CVector2> fakeTrail = TrailToShare;
-
-    if(fakeTrail.empty()) {
-        fakeTrail.push_back(fakeTarget);
-    }
+    /* Build a fake trail: line from current position back to the nest.
+     * This guarantees 2 points so the trail line is always visible. */
+    std::vector<CVector2> fakeTrail;
+    fakeTrail.push_back(fakeTarget);
+    fakeTrail.push_back(LoopFunctions->NestPosition);
 
     Real timeInSeconds = (Real)(SimulationTick() / SimulationTicksPerSecond());
 
