@@ -25,6 +25,7 @@ class Pheromone {
         bool                          IsActive();
         argos::CVector2              location;
         size_t ResourceDensity;
+        std::string                     GetRobotId();
 
 	private:
 

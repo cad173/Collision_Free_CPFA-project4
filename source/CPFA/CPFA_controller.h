@@ -6,6 +6,7 @@
 #include <source/CPFA/CPFA_loop_functions.h>
 /* Definition of the LEDs actuator */
 #include <argos3/plugins/robots/generic/control_interface/ci_leds_actuator.h>
+#include <map>
 
 using namespace std;
 using namespace argos;
@@ -104,6 +105,9 @@ class CPFA_controller : public BaseController {
 		string results_path;
 		string results_full_path;
 		bool isUsingPheromone;
+		map<string, double> trustScore;
+		string lastPheromoneSource;
+		bool followedPheromone;
 
 		unsigned int survey_count;
 		/* Pointer to the LEDs actuator */

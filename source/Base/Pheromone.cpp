@@ -84,3 +84,7 @@ size_t  Pheromone::GetResourceDensity(){
 bool Pheromone::IsActive() {
 	return (weight > threshold);
 }
+
+std::string Pheromone::GetRobotId() {
+    return robotID;
+}

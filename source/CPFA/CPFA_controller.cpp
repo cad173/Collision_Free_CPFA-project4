@@ -21,6 +21,8 @@ CPFA_controller::CPFA_controller() :
     m_pcLEDs(NULL),
         updateFidelity(false)
 {
+	followedPheromone = false;
+	lastPheromoneSource = "";
 }
 
 void CPFA_controller::Init(argos::TConfigurationNode &node) {
@@ -107,6 +109,23 @@ void CPFA_controller::ControlStep() {
 	//UpdateTargetRayList();
 	CPFA();
 	Move();
+
+	double avgTrust = 0.0;
+	int count = 0;
+
+	for(auto &entry : trustScore) {
+		avgTrust += entry.second;
+		count++;
+	}
+
+	if(count > 0) avgTrust /= count;
+
+	if(avgTrust > 0.7)
+		m_pcLEDs->SetAllColors(CColor::GREEN);
+	else if(avgTrust < 0.3)
+		m_pcLEDs->SetAllColors(CColor::RED);
+	else
+		m_pcLEDs->SetAllColors(CColor::YELLOW);
 }
 
 void CPFA_controller::Reset() {
@@ -134,6 +153,9 @@ void CPFA_controller::Reset() {
 	isHoldingFood = false;
 	isUsingSiteFidelity = false;
 	isGivingUpSearch = false;
+
+	followedPheromone = false;
+	lastPheromoneSource = "";
 }
 
 bool CPFA_controller::IsHoldingFood() {
@@ -493,6 +515,16 @@ void CPFA_controller::Returning() {
 	    argos::Real poissonCDF_sFollowRate = GetPoissonCDF(ResourceDensity, LoopFunctions->RateOfSiteFidelity);
 	    argos::Real r1 = RNG->Uniform(argos::CRange<argos::Real>(0.0, 1.0));
 	    argos::Real r2 = RNG->Uniform(argos::CRange<argos::Real>(0.0, 1.0));
+
+		if(!isHoldingFood && followedPheromone) {
+			trustScore[lastPheromoneSource] -= 0.02;
+			if(trustScore[lastPheromoneSource] < 0.0)
+				trustScore[lastPheromoneSource] = 0.0;
+			argos::LOG << "Penalizing " << lastPheromoneSource
+					<< " new trust = " << trustScore[lastPheromoneSource] << std::endl;
+			followedPheromone = false;
+		}
+
 	    if (isHoldingFood) { 
           //drop off the food and display in the nest 
           argos::CVector2 placementPosition;
@@ -509,7 +541,7 @@ void CPFA_controller::Returning() {
           if(poissonCDF_pLayRate > r1 && updateFidelity) {
 	            TrailToShare.push_back(LoopFunctions->NestPosition); //qilu 07/26/2016
                 argos::Real timeInSeconds = (argos::Real)(SimulationTick() / SimulationTicksPerSecond());
-		        Pheromone sharedPheromone(SiteFidelityPosition, TrailToShare, timeInSeconds, LoopFunctions->RateOfPheromoneDecay, ResourceDensity, GetId());
+		        Pheromone sharedPheromone(SiteFidelityPosition, TrailToShare, timeInSeconds, LoopFunctions->RateOfPheromoneDecay, ResourceDensity, controllerID);
                 LoopFunctions->PheromoneList.push_back(sharedPheromone);
                 sharedPheromone.Deactivate(); // make sure this won't get re-added later...
           }
@@ -572,7 +604,8 @@ void CPFA_controller::Returning() {
         }
         //detect other robots in its camera view
         
-    }		
+    }
+	isHoldingFood = false;		
 }
 
 void CPFA_controller::SetRandomSearchLocation() {
@@ -661,6 +694,15 @@ void CPFA_controller::SetHoldingFood() {
          LoopFunctions->FoodColoringList = newFoodColoringList; //qilu 09/12/2016
          SetLocalResourceDensity();
       }
+	}
+
+	if(followedPheromone) {
+		trustScore[lastPheromoneSource] += 0.05;
+		if(trustScore[lastPheromoneSource] > 1.0)
+			trustScore[lastPheromoneSource] = 1.0;
+		argos::LOG << "Rewarding " << lastPheromoneSource
+				<< " new trust = " << trustScore[lastPheromoneSource] << std::endl;
+		followedPheromone = false;
 	}
 		
 	// This shouldn't be checked here ---
@@ -772,6 +814,7 @@ void CPFA_controller::SetFidelityList() {
  *        FALSE: pheromones don't exist or are all inactive
  *****/
 bool CPFA_controller::SetTargetPheromone() {
+	followedPheromone = false;
 	argos::Real maxStrength = 0.0, randomWeight = 0.0;
 	bool isPheromoneSet = false;
 
@@ -793,18 +836,31 @@ bool CPFA_controller::SetTargetPheromone() {
 
 	/* Randomly select an active pheromone to follow. */
 	for(size_t i = 0; i < LoopFunctions->PheromoneList.size(); i++) {
-		   if(randomWeight < LoopFunctions->PheromoneList[i].GetWeight()) {
-			       /* We've chosen a pheromone! */
-			       SetIsHeadingToNest(false);
-          SetTarget(LoopFunctions->PheromoneList[i].GetLocation());
-          TrailToFollow = LoopFunctions->PheromoneList[i].GetTrail();
-          isPheromoneSet = true;
-          /* If we pick a pheromone, break out of this loop. */
-          break;
-     }
+		
+		string source = LoopFunctions->PheromoneList[i].GetRobotId();
+		double trust = trustScore[source];
+		double weighted = LoopFunctions->PheromoneList[i].GetWeight() * trust;
+
+		if(randomWeight < weighted) {
+			SetIsHeadingToNest(false);
+			SetTarget(LoopFunctions->PheromoneList[i].GetLocation());
+			TrailToFollow = LoopFunctions->PheromoneList[i].GetTrail();
+			
+			lastPheromoneSource = LoopFunctions->PheromoneList[i].GetRobotId();
+			followedPheromone = true;
+
+			isPheromoneSet = true;
+			/* If we pick a pheromone, break out of this loop. */
+			break;
+		}
 
      /* We didn't pick a pheromone! Remove its weight from randomWeight. */
-     randomWeight -= LoopFunctions->PheromoneList[i].GetWeight();
+    	randomWeight -= weighted;
+	}
+
+	if(followedPheromone) {
+		argos::LOG << "Following pheromone from: " 
+				<< lastPheromoneSource << std::endl;
 	}
 
 	//ofstream log_output_stream;

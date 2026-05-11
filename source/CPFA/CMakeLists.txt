@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 project(CPFA_PROJECT)
 
 find_package(ARGoS REQUIRED)
@@ -21,7 +21,7 @@ add_library(CPFA_loop_functions SHARED
 )
 
 target_link_libraries(CPFA_loop_functions
-    CPFA_controller
+    # CPFA_controller
     argos3core_simulator
     argos3plugin_simulator_entities
     argos3plugin_simulator_footbot
@@ -39,6 +39,7 @@ add_library(CPFA_controller SHARED
 )
 
 target_link_libraries(CPFA_controller
+    CPFA_loop_functions
     BaseController
     Pheromone
     Nest
