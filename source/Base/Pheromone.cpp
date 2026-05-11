@@ -15,7 +15,7 @@ Pheromone::Pheromone(argos::CVector2              newLocation,
                              argos::Real                  newTime,
                              argos::Real                  newDecayRate,
                              size_t                       density,
-                            std::string id, 
+                            std::string id,
                             bool fakePheromone)
 {
     /* required initializations */
@@ -29,6 +29,9 @@ Pheromone::Pheromone(argos::CVector2              newLocation,
 	threshold   = 0.001;
     isFake       = fakePheromone;
     robotID      = id;
+    /* voting: track how many robots visited and how many found nothing */
+    visitCount    = 0;
+    suspicionCount = 0;
 }
 
 /*****
@@ -83,4 +86,25 @@ size_t  Pheromone::GetResourceDensity(){
  *****/
 bool Pheromone::IsActive() {
 	return (weight > threshold);
+}
+
+bool Pheromone::IsFake() const {
+    return isFake;
+}
+
+/* A pheromone is suspicious when enough visitors reported finding no food.
+ * Rejected when suspicionCount / visitCount exceeds the given ratio threshold. */
+bool Pheromone::IsSuspicious(argos::Real ratioThreshold) const {
+    if (visitCount == 0) return false;
+    return ((argos::Real)suspicionCount / (argos::Real)visitCount) > ratioThreshold;
+}
+
+/* Called when a robot selects this pheromone to follow. */
+void Pheromone::IncrementVisitCount() {
+    visitCount++;
+}
+
+/* Called when a robot followed this pheromone and returned empty-handed. */
+void Pheromone::IncrementSuspicionCount() {
+    suspicionCount++;
 }

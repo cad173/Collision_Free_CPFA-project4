@@ -22,7 +22,12 @@ class Pheromone {
         std::vector<argos::CVector2> GetTrail();
         argos::Real                  GetWeight();
         size_t                       GetResourceDensity();
-        bool                          IsActive();
+        bool                         IsActive();
+        bool                         IsFake() const;
+        bool                         IsSuspicious(argos::Real threshold = 0.6) const;
+        void                         IncrementVisitCount();
+        void                         IncrementSuspicionCount();
+
         argos::CVector2              location;
         size_t ResourceDensity;
 
@@ -37,7 +42,11 @@ class Pheromone {
         argos::Real weight;
         argos::Real threshold;
         bool isFake;
-        std::string robotID; // the ID of the robot that created this pheromone, used to find fake pheromones
+        std::string robotID;
+
+        /* voting/reporting variables */
+        size_t visitCount;
+        size_t suspicionCount;
 };
 
 #endif /* IANT_PHEROMONE_H */
