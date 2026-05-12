@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 project(CPFA_PROJECT)
 
 find_package(ARGoS REQUIRED)
@@ -64,3 +64,7 @@ target_link_libraries(ACPFA_controller
     argos3plugin_simulator_footbot
     argos3plugin_simulator_genericrobot
 )
+
+if(APPLE)
+    target_link_options(CPFA_controller PRIVATE -undefined dynamic_lookup)
+endif()
