@@ -27,6 +27,8 @@ class Pheromone {
         bool                         IsSuspicious(argos::Real threshold = 0.6) const;
         void                         IncrementVisitCount();
         void                         IncrementSuspicionCount();
+        /* set true the first time IsSuspicious() triggers, prevents PostStep double-counting */
+        bool                         wasMarkedSuspicious;
 
         argos::CVector2              location;
         size_t ResourceDensity;

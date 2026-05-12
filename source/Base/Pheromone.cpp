@@ -30,8 +30,9 @@ Pheromone::Pheromone(argos::CVector2              newLocation,
     isFake       = fakePheromone;
     robotID      = id;
     /* voting: track how many robots visited and how many found nothing */
-    visitCount    = 0;
-    suspicionCount = 0;
+    visitCount          = 0;
+    suspicionCount      = 0;
+    wasMarkedSuspicious = false;
 }
 
 /*****
