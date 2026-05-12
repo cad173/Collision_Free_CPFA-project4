@@ -124,7 +124,18 @@ void CPFA_loop_functions::Init(argos::TConfigurationNode &node) {
 	   	argos::CFootBotEntity& footBot = *argos::any_cast<argos::CFootBotEntity*>(it->second);
 		BaseController& c = dynamic_cast<BaseController&>(footBot.GetControllableEntity().GetController());
 		c.SetLoopFunctions(this);
+
+		/* Build ground-truth adversary set for accuracy scoring. */
+		try {
+			CPFA_controller& cpfa = dynamic_cast<CPFA_controller&>(c);
+			if (cpfa.IsAdversary()) {
+				adversaryRobots.insert(cpfa.GetId());
+			}
+		} catch(std::bad_cast&) {}
 	   }
+	   argos::LOG << "[INIT] Adversary robots (" << adversaryRobots.size() << "): ";
+	   for (const auto& id : adversaryRobots) argos::LOG << id << " ";
+	   argos::LOG << std::endl;
      
      
    NestRadiusSquared = NestRadius*NestRadius;
@@ -154,6 +165,7 @@ void CPFA_loop_functions::Reset() {
 	PheromoneList.clear();
 	FidelityList.clear();
     TargetRayList.clear();
+    robotReputation.clear();
     totalRejections             = 0;
     totalFalsePositiveRejections = 0;
     ticksToFirstRejection       = 0;
@@ -248,7 +260,47 @@ bool CPFA_loop_functions::IsExperimentFinished() {
 }
 
 void CPFA_loop_functions::PostExperiment() {
-	  
+
+    /* Robot-reputation accuracy report (always printed). */
+    {
+        size_t tp = 0, fp = 0, flaggedTotal = 0;
+        for (const auto& kv : robotReputation) {
+            if (!kv.second.flagged) continue;
+            flaggedTotal++;
+            if (adversaryRobots.count(kv.first) > 0) tp++;
+            else fp++;
+        }
+        size_t fn = adversaryRobots.size() - tp;
+        size_t friendlyCount = Num_robots - adversaryRobots.size();
+        size_t tn = friendlyCount - fp;
+
+        argos::LOG << "[ACCURACY]"
+                   << " Adversaries=" << adversaryRobots.size()
+                   << " Friendly=" << friendlyCount
+                   << " | TP=" << tp
+                   << " FP=" << fp
+                   << " FN=" << fn
+                   << " TN=" << tn;
+        if (flaggedTotal > 0)
+            argos::LOG << " | Precision=" << (double)tp / flaggedTotal;
+        if (!adversaryRobots.empty())
+            argos::LOG << " | Recall=" << (double)tp / adversaryRobots.size();
+        argos::LOG << std::endl;
+
+        /* Per-robot reputation detail for inspection. */
+        for (const auto& kv : robotReputation) {
+            const std::string& id = kv.first;
+            const RobotReputation& rep = kv.second;
+            bool isAdversary = adversaryRobots.count(id) > 0;
+            argos::LOG << "[REPUTATION] " << id
+                       << (isAdversary ? " (adversary)" : " (friendly)")
+                       << " suspicious_ph=" << rep.suspiciousPheromones
+                       << " empty=" << rep.emptyReturns << "/" << rep.totalReturns
+                       << (rep.flagged ? " FLAGGED" : "")
+                       << std::endl;
+        }
+    }
+
      printf("%f, %f, %lu\n", score, getSimTimeInSeconds(), RandomSeed);
        
                   
@@ -346,6 +398,42 @@ void CPFA_loop_functions::PostExperiment() {
 
 argos::CColor CPFA_loop_functions::GetFloorColor(const argos::CVector2 &c_pos_on_floor) {
 	return argos::CColor::WHITE;
+}
+
+void CPFA_loop_functions::RecordPheromoneReturn(const std::string& robotID,
+                                                bool foundEmpty,
+                                                size_t newlySuspicious) {
+    RobotReputation& rep = robotReputation[robotID];
+    if (rep.flagged) return;
+
+    rep.totalReturns++;
+    if (foundEmpty) rep.emptyReturns++;
+    rep.suspiciousPheromones += newlySuspicious;
+
+    if (rep.suspiciousPheromones >= ROBOT_SUSPICIOUS_THRESHOLD) {
+        rep.flagged = true;
+        bool isAdversary = adversaryRobots.count(robotID) > 0;
+        argos::LOG << "[FLAG] Robot " << robotID
+                   << (isAdversary ? " (adversary) TRUE POSITIVE" : " (friendly) FALSE POSITIVE")
+                   << " | suspicious_pheromones=" << rep.suspiciousPheromones
+                   << " empty=" << rep.emptyReturns << "/" << rep.totalReturns
+                   << " at tick " << GetSpace().GetSimulationClock()
+                   << std::endl;
+
+        /* Immediately deactivate all remaining pheromones from this robot so the
+         * swarm stops following them right away rather than waiting for decay. */
+        for (Pheromone& ph : PheromoneList) {
+            if (ph.GetRobotID() == robotID) {
+                ph.Deactivate();
+            }
+        }
+    }
+}
+
+bool CPFA_loop_functions::IsRobotFlagged(const std::string& robotID) const {
+    auto it = robotReputation.find(robotID);
+    if (it == robotReputation.end()) return false;
+    return it->second.flagged;
 }
 
 void CPFA_loop_functions::UpdatePheromoneList() {

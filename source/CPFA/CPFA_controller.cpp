@@ -489,17 +489,54 @@ void CPFA_controller::Returning() {
 
 	// Are we there yet? (To the nest, that is.)
 	if(IsInTheNest()) {
-		/* If we followed a pheromone and came back empty-handed, vote against it. */
-		if(!isHoldingFood && followedPheromoneIndex >= 0 &&
+		/* Record the outcome of following a pheromone, whether food was found or not.
+		 * Empty-handed returns also cast a pheromone-level suspicion vote. */
+		if(followedPheromoneIndex >= 0 &&
 		   followedPheromoneIndex < (int)LoopFunctions->PheromoneList.size()) {
 			Pheromone& p = LoopFunctions->PheromoneList[followedPheromoneIndex];
-			p.IncrementSuspicionCount();
-			argos::LOG << "[VOTE] " << GetId()
-			           << " reporting pheromone[" << followedPheromoneIndex << "]"
-			           << (p.IsFake() ? " (FAKE)" : " (real)")
-			           << " — suspicious: " << (p.IsSuspicious() ? "YES (rejected)" : "no")
-			           << " at tick " << SimulationTick()
-			           << std::endl;
+
+			const std::string sourceRobotID = p.GetRobotID();
+
+			/* Count suspicious pheromones from this robot BEFORE voting. */
+			size_t suspiciousBefore = 0;
+			for (size_t j = 0; j < LoopFunctions->PheromoneList.size(); j++) {
+				if (LoopFunctions->PheromoneList[j].GetRobotID() == sourceRobotID &&
+				    LoopFunctions->PheromoneList[j].IsSuspicious())
+					suspiciousBefore++;
+			}
+
+			if (!isHoldingFood) {
+				p.IncrementSuspicionCount();
+				argos::LOG << "[VOTE] " << GetId()
+				           << " reporting pheromone[" << followedPheromoneIndex << "]"
+				           << " from robot " << sourceRobotID
+				           << (p.IsFake() ? " (FAKE)" : " (real)")
+				           << " — suspicious: " << (p.IsSuspicious() ? "YES" : "no")
+				           << " at tick " << SimulationTick()
+				           << std::endl;
+
+				/* Cross-vote: one bad return propagates suspicion to all of this
+				 * robot's other active pheromones, accelerating detection. */
+				for (size_t j = 0; j < LoopFunctions->PheromoneList.size(); j++) {
+					if ((int)j == followedPheromoneIndex) continue;
+					Pheromone& other = LoopFunctions->PheromoneList[j];
+					if (other.IsActive() && !other.IsSuspicious() &&
+					    other.GetRobotID() == sourceRobotID) {
+						other.IncrementVisitCount();
+						other.IncrementSuspicionCount();
+					}
+				}
+			}
+
+			/* Count how many pheromones newly became suspicious after voting. */
+			size_t suspiciousAfter = 0;
+			for (size_t j = 0; j < LoopFunctions->PheromoneList.size(); j++) {
+				if (LoopFunctions->PheromoneList[j].GetRobotID() == sourceRobotID &&
+				    LoopFunctions->PheromoneList[j].IsSuspicious())
+					suspiciousAfter++;
+			}
+			size_t newlySuspicious = suspiciousAfter - suspiciousBefore;
+			LoopFunctions->RecordPheromoneReturn(sourceRobotID, !isHoldingFood, newlySuspicious);
 		}
 		followedPheromoneIndex = -1;
 
@@ -794,10 +831,12 @@ bool CPFA_controller::SetTargetPheromone() {
 
  if(LoopFunctions->PheromoneList.size()==0) return isPheromoneSet; //the case of no pheromone.
 
-	/* Sum weights of active, non-suspicious pheromones only. */
+	/* Sum weights of active, non-suspicious, non-flagged-robot pheromones only. */
 	for(size_t i = 0; i < LoopFunctions->PheromoneList.size(); i++) {
-		if(LoopFunctions->PheromoneList[i].IsActive() && !LoopFunctions->PheromoneList[i].IsSuspicious()) {
-			maxStrength += LoopFunctions->PheromoneList[i].GetWeight();
+		Pheromone& ph = LoopFunctions->PheromoneList[i];
+		if(ph.IsActive() && !ph.IsSuspicious() &&
+		   !LoopFunctions->IsRobotFlagged(ph.GetRobotID())) {
+			maxStrength += ph.GetWeight();
 		}
 	}
 
@@ -806,13 +845,15 @@ bool CPFA_controller::SetTargetPheromone() {
 	/* Calculate a random weight. */
 	randomWeight = RNG->Uniform(argos::CRange<argos::Real>(0.0, maxStrength));
 
-	/* Randomly select an active, non-suspicious pheromone to follow. */
+	/* Randomly select an active, non-suspicious, non-flagged-robot pheromone to follow. */
 	for(size_t i = 0; i < LoopFunctions->PheromoneList.size(); i++) {
-		if(!LoopFunctions->PheromoneList[i].IsActive() || LoopFunctions->PheromoneList[i].IsSuspicious()) {
-			continue; // skip inactive or voted-out pheromones
+		Pheromone& ph = LoopFunctions->PheromoneList[i];
+		if(!ph.IsActive() || ph.IsSuspicious() ||
+		   LoopFunctions->IsRobotFlagged(ph.GetRobotID())) {
+			continue; // skip inactive, voted-out, or flagged-source pheromones
 		}
 
-		if(randomWeight < LoopFunctions->PheromoneList[i].GetWeight()) {
+		if(randomWeight < ph.GetWeight()) {
 			/* We've chosen a pheromone — record the index and count the visit. */
 			SetIsHeadingToNest(false);
 			SetTarget(LoopFunctions->PheromoneList[i].GetLocation());
@@ -820,10 +861,10 @@ bool CPFA_controller::SetTargetPheromone() {
 			isPheromoneSet = true;
 			followedPheromoneIndex = (int)i;
 			LoopFunctions->PheromoneList[i].IncrementVisitCount();
-			/* log whether the chosen pheromone is real or fake */
 			argos::LOG << "[VOTE] " << GetId()
 			           << " following pheromone[" << i << "]"
-			           << (LoopFunctions->PheromoneList[i].IsFake() ? " (FAKE)" : " (real)")
+			           << " from robot " << ph.GetRobotID()
+			           << (ph.IsFake() ? " (FAKE)" : " (real)")
 			           << " at tick " << SimulationTick()
 			           << std::endl;
 			break;

@@ -28,6 +28,7 @@ class CPFA_controller : public BaseController {
 		bool IsHoldingFood();
 		bool IsUsingSiteFidelity();
 		bool IsInTheNest();
+		virtual bool IsAdversary() const { return false; }
 
 		Real FoodDistanceTolerance;
 
