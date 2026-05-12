@@ -106,7 +106,7 @@ class CPFA_controller : public BaseController {
 		string results_full_path;
 		bool isUsingPheromone;
 		/* index into LoopFunctions->PheromoneList for the pheromone this robot is following (-1 = none) */
-		int followedPheromoneIndex;
+		int followedPheromoneIndex; 
 
 		unsigned int survey_count;
 		/* Pointer to the LEDs actuator */
