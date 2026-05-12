@@ -29,6 +29,7 @@ class Pheromone {
         void                         IncrementSuspicionCount();
         /* set true the first time IsSuspicious() triggers, prevents PostStep double-counting */
         bool                         wasMarkedSuspicious;
+        std::string                  GetRobotID() const;
 
         argos::CVector2              location;
         size_t ResourceDensity;

@@ -11,6 +11,7 @@ public:
   ACPFA_controller();
 
   void Init(argos::TConfigurationNode &node) override;
+  bool IsAdversary() const override { return true; }
 
 protected:
 

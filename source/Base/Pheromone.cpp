@@ -109,3 +109,7 @@ void Pheromone::IncrementVisitCount() {
 void Pheromone::IncrementSuspicionCount() {
     suspicionCount++;
 }
+
+std::string Pheromone::GetRobotID() const {
+    return robotID;
+}

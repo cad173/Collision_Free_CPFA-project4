@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 project(CPFA_PROJECT)
 
 find_package(ARGoS REQUIRED)
@@ -46,6 +46,13 @@ target_link_libraries(CPFA_controller
     argos3plugin_simulator_footbot
     argos3plugin_simulator_genericrobot
 )
+
+# CPFA_controller calls CPFA_loop_functions methods but can't link against it
+# directly (circular dependency). ARGoS resolves both as runtime plugins, so
+# we defer symbol resolution to load time on macOS.
+if(APPLE)
+    target_link_options(CPFA_controller PRIVATE -undefined dynamic_lookup)
+endif()
 
 ###############################################
 # Adversary Controller (FIXED)

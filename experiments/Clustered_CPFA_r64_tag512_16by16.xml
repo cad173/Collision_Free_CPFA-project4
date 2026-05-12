@@ -36,7 +36,24 @@
       </params>
 
     </CPFA_controller>
-    
+
+    <ACPFA_controller id="ADVERSARY" library="build/source/CPFA/libACPFA_controller">
+      <actuators>
+        <differential_steering implementation="default"/>
+        <leds implementation="default" medium="leds"/>
+      </actuators>
+      <sensors>
+        <footbot_proximity implementation="default" show_rays="false"/>
+        <positioning implementation="default"/>
+      </sensors>
+      <params>
+        <settings DestinationNoiseStdev="0.0" FoodDistanceTolerance="0.13" NestAngleTolerance="0.1"
+          NestDistanceTolerance="0.05" PositionNoiseStdev="0.00" ResultsDirectoryPath="results/"
+          RobotForwardSpeed="16.0" RobotRotationSpeed="8.0" SearchStepSize="0.08"
+          TargetAngleTolerance="0.1" TargetDistanceTolerance="0.05"/>
+      </params>
+    </ACPFA_controller>
+
   </controllers>
 
   <loop_functions label="CPFA_loop_functions" library="build/source/CPFA/libCPFA_loop_functions">
@@ -96,7 +113,16 @@ VaryForwardSpeedFlag = "0" NumOfBranches = "4"/>
 </entity>
 </distribute>
 
-  </arena> 
+    <!-- Adversary robots -->
+    <distribute>
+      <position max="3.0, 3.0, 0.0" method="uniform" min="-3.0, -3.0, 0.0"/>
+      <orientation mean="0, 0, 0" method="gaussian" std_dev="360, 0, 0"/>
+      <entity max_trials="100" quantity="8">
+        <foot-bot id="A0-"><controller config="ADVERSARY"/></foot-bot>
+      </entity>
+    </distribute>
+
+  </arena>
     
   <!-- ******************* -->
   <!-- * Physics engines * -->
@@ -124,5 +150,5 @@ VaryForwardSpeedFlag = "0" NumOfBranches = "4"/>
     </qt-opengl>
 
   </visualization>
--->
+
 </argos-configuration>

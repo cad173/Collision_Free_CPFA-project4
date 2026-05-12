@@ -6,6 +6,7 @@
 #include <argos3/core/simulator/entity/floor_entity.h>
 #include <source/CPFA/CPFA_controller.h>
 #include <argos3/plugins/simulator/entities/cylinder_entity.h>
+#include <set>
 
 using namespace argos;
 using namespace std;
@@ -73,6 +74,56 @@ class CPFA_loop_functions : public argos::CLoopFunctions
 
 
 		void setScore(double s);
+
+		/* ── Robot reputation ─────────────────────────────────────────────────
+		 * Each robot accumulates a reputation based on pheromone outcomes.
+		 * badReports  = times a robot returned empty after following this robot's pheromone
+		 * totalReports = good + bad returns from this robot's pheromones
+		 *
+		 * A robot is flagged as adversary only when BOTH conditions hold:
+		 *   totalReports >= ROBOT_MIN_REPORTS (enough evidence)
+		 *   badReports / totalReports > ROBOT_BAD_RATIO (consistently bad)
+		 *
+		 * This lets friendly robots survive occasional honest mistakes (their
+		 * ratio stays low) while adversaries, who only place fake trails, quickly
+		 * accumulate a near-1.0 bad ratio and get permanently ignored.
+		 * ──────────────────────────────────────────────────────────────────── */
+		/* ── Robot reputation ─────────────────────────────────────────────────
+		 * Two signals are tracked per robot:
+		 *
+		 *  suspiciousPheromones  — distinct pheromones that crossed the IsSuspicious()
+		 *                          threshold (majority of visitors returned empty).
+		 *                          This is the primary flagging signal because it
+		 *                          ignores robots that accidentally found real food
+		 *                          while travelling to a fake pheromone location.
+		 *
+		 *  emptyReturns/totalReturns — raw return stats kept for display only.
+		 *
+		 * A robot is flagged as adversary only when:
+		 *   suspiciousPheromones >= ROBOT_SUSPICIOUS_THRESHOLD
+		 *
+		 * Friendly robots with accidents rarely accumulate 2+ fully-suspicious
+		 * pheromones.  Adversaries, who place nothing but fakes, quickly do.
+		 * ──────────────────────────────────────────────────────────────────── */
+		struct RobotReputation {
+			size_t suspiciousPheromones = 0; // distinct pheromones that became suspicious
+			size_t emptyReturns         = 0; // display only
+			size_t totalReturns         = 0; // display only
+			bool   flagged              = false;
+		};
+
+		static const size_t ROBOT_SUSPICIOUS_THRESHOLD = 2;
+
+		/* Call when a robot returns from a pheromone (foundEmpty = returned without food).
+		 * newlySuspicious = pheromone just crossed IsSuspicious() for the first time. */
+		void RecordPheromoneReturn(const std::string& robotID,
+		                           bool foundEmpty,
+		                           size_t newlySuspicious);
+		bool IsRobotFlagged(const std::string& robotID) const;
+
+		std::map<std::string, RobotReputation> robotReputation;
+		/* ground truth: populated at Init from ACPFA controller type */
+		std::set<std::string> adversaryRobots;
 
 		argos::CRandom::CRNG* RNG;
                 size_t NumDistributedFood;
