@@ -146,6 +146,11 @@ class CPFA_loop_functions : public argos::CLoopFunctions
 		bool IsCollidingWithFood(argos::CVector2 p);
 		double score;
 		int PrintFinalScore;
+
+		/* voting robustness counters — updated by PostStep() */
+		size_t totalRejections;           // pheromones voted out (fake ones caught)
+		size_t totalFalsePositiveRejections; // real pheromones wrongly voted out
+		size_t ticksToFirstRejection;     // 0 = no rejection occurred
 };
 
 #endif /* CPFA_LOOP_FUNCTIONS_H */

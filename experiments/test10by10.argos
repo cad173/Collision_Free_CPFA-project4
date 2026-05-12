@@ -5,7 +5,7 @@
   <!-- ************************* -->
   <framework>
     <system threads="0"/>
-    <experiment length="6000" random_seed="0" ticks_per_second="32"/>
+    <experiment length="23040" random_seed="0" ticks_per_second="32"/>
   </framework>
 
   <!-- *************** -->
@@ -34,7 +34,7 @@
 
     </CPFA_controller>
     
-    <advesary_controller id="ADVERSARY" library="build/source/CPFA/libadvesary_controller">
+    <ACPFA_controller id="ADVERSARY" library="build/source/CPFA/libACPFA_controller">
       <actuators>
         <differential_steering implementation="default"/>
         <leds implementation="default" medium="leds"/>
@@ -47,7 +47,7 @@
         <settings DestinationNoiseStdev="0.0" FoodDistanceTolerance="0.13" NestAngleTolerance="0.1" NestDistanceTolerance="0.05" PositionNoiseStdev="0.00" ResultsDirectoryPath="results/" RobotForwardSpeed="16.0" RobotRotationSpeed="8.0" SearchStepSize="0.08" TargetAngleTolerance="0.1" TargetDistanceTolerance="0.05"/>
         <advesary_controller FakeDensity="20" FakeDecayRate="0.02" InjectionRate="320"/>
       </params>
-    </advesary_controller>
+    </ACPFA_controller>
 
   </controllers>
 

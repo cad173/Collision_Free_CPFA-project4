@@ -41,7 +41,10 @@ CPFA_loop_functions::CPFA_loop_functions() :
 	SearchRadiusSquared((4.0 * FoodRadius) * (4.0 * FoodRadius)),
 	NumDistributedFood(0),
 	score(0),
-	PrintFinalScore(0)
+	PrintFinalScore(0),
+	totalRejections(0),
+	totalFalsePositiveRejections(0),
+	ticksToFirstRejection(0)
 {}
 
 void CPFA_loop_functions::Init(argos::TConfigurationNode &node) {	
@@ -151,6 +154,9 @@ void CPFA_loop_functions::Reset() {
 	PheromoneList.clear();
 	FidelityList.clear();
     TargetRayList.clear();
+    totalRejections             = 0;
+    totalFalsePositiveRejections = 0;
+    ticksToFirstRejection       = 0;
     
     SetFoodDistribution();
     
@@ -195,7 +201,22 @@ void CPFA_loop_functions::PreStep() {
 }
 
 void CPFA_loop_functions::PostStep() {
-	// nothing... yet...
+    /* Scan pheromones for newly rejected ones each tick. */
+    for(size_t i = 0; i < PheromoneList.size(); i++) {
+        Pheromone& p = PheromoneList[i];
+
+        if(p.IsSuspicious() && !p.wasMarkedSuspicious) {
+            p.wasMarkedSuspicious = true;
+            totalRejections++;
+
+            /* a real pheromone voted out = false positive */
+            if(!p.IsFake()) totalFalsePositiveRejections++;
+
+            /* record the tick of the very first rejection */
+            if(ticksToFirstRejection == 0)
+                ticksToFirstRejection = GetSpace().GetSimulationClock();
+        }
+    }
 }
 
 bool CPFA_loop_functions::IsExperimentFinished() {
@@ -294,8 +315,31 @@ void CPFA_loop_functions::PostExperiment() {
         for(size_t i=1; i< ForageList.size(); i++) forageDataOutput<<", "<<ForageList[i];
         forageDataOutput<<"\n";
         forageDataOutput.close();
-        
-      }  
+
+        /* print voting robustness summary to console */
+        argos::LOG << "\n=== Voting Robustness Report ===" << std::endl;
+        argos::LOG << "  Tags collected:              " << Score() << std::endl;
+        argos::LOG << "  Time (minutes):              " << curr_time_in_minutes << std::endl;
+        argos::LOG << "  Total rejections:            " << totalRejections << std::endl;
+        argos::LOG << "  False positive rejections:   " << totalFalsePositiveRejections << std::endl;
+        argos::LOG << "  Ticks to first rejection:    "
+                   << (ticksToFirstRejection > 0 ? to_string(ticksToFirstRejection) : "never") << std::endl;
+        argos::LOG << "================================\n" << std::endl;
+
+        /* write voting robustness summary to CSV */
+        ofstream votingDataOutput((header + "VotingRobustnessData.csv").c_str(), ios::app);
+        if(votingDataOutput.tellp() == 0) {
+            votingDataOutput << "tags_collected, time_in_minutes, total_rejections, "
+                             << "false_positive_rejections, ticks_to_first_rejection, random_seed\n";
+        }
+        votingDataOutput << Score() << ", "
+                         << curr_time_in_minutes << ", "
+                         << totalRejections << ", "
+                         << totalFalsePositiveRejections << ", "
+                         << ticksToFirstRejection << ", "
+                         << RandomSeed << "\n";
+        votingDataOutput.close();
+      }
 
 }
 
